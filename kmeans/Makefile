@@ -93,18 +93,18 @@ seq_main: $(SEQ_OBJ) $(H_FILES)
 # ------------------------------------------------------------------------------
 # CUDA Version
 
-%.o : %.cu
-	$(NVCC) $(NVCCFLAGS) -o $@ -c $<
+#jing#%.o : %.cu
+#jing#	$(NVCC) $(NVCCFLAGS) -o $@ -c $<
 
-CUDA_C_SRC = cuda_main.cu cuda_io.cu cuda_wtime.cu
-CUDA_CU_SRC = cuda_kmeans.cu
+#jing#CUDA_C_SRC = cuda_main.cu cuda_io.cu cuda_wtime.cu
+#jing#CUDA_CU_SRC = cuda_kmeans.cu
 
-CUDA_C_OBJ = $(CUDA_C_SRC:%.cu=%.o)
-CUDA_CU_OBJ = $(CUDA_CU_SRC:%.cu=%.o)
+#jing#CUDA_C_OBJ = $(CUDA_C_SRC:%.cu=%.o)
+#jing#CUDA_CU_OBJ = $(CUDA_CU_SRC:%.cu=%.o)
 
-cuda: cuda_main
-cuda_main: $(CUDA_C_OBJ) $(CUDA_CU_OBJ)
-	$(NVCC) $(LDFLAGS) -o $@ $(CUDA_C_OBJ) $(CUDA_CU_OBJ)
+#jing#cuda: cuda_main
+#jing#cuda_main: $(CUDA_C_OBJ) $(CUDA_CU_OBJ)
+#jing#	$(NVCC) $(LDFLAGS) -o $@ $(CUDA_C_OBJ) $(CUDA_CU_OBJ)
 
 #---------------------------------------------------------------------
 clean:
