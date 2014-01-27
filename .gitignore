@@ -2,3 +2,8 @@
 *.o
 *~
 ~.swp
+kmeans01.dat
+kmeans02.dat
+kmeans03.dat
+kmeans04.dat
+/experiment
