@@ -7,3 +7,5 @@ kmeans02.dat
 kmeans03.dat
 kmeans04.dat
 /experiment
+*.membership
+*.cluster_centres
