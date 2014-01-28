@@ -62,7 +62,11 @@ namespace omp
           std::cout<<"\t"<< (end_time - start_time)<<" milliseconds\n";
 
           tripleloop(answers, sq_matrix_1, sq_matrix_2, TestFrameWork::matrix_dim[i], TestFrameWork::matrix_dim[i], TestFrameWork::matrix_dim[i]);
-
+		  //float tmp = TestFrameWork::diff(answers, result, TestFrameWork::matrix_dim[i], TestFrameWork::matrix_dim[i]);
+		  //if(tmp >= EPS) {
+			  //std::cout<<"wrong answer! "<<tmp<<std::endl;
+		  //}
+		
           CPPUNIT_ASSERT(TestFrameWork::diff(answers, result, TestFrameWork::matrix_dim[i], TestFrameWork::matrix_dim[i]) < EPS);
 
           delete sq_matrix_1;
