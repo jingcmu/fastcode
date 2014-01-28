@@ -10,3 +10,5 @@ kmeans04.dat
 *.cluster_centres
 *.xml
 matrix_mul
+*.dat
+*.exe
