@@ -6,8 +6,10 @@ kmeans01.dat
 kmeans02.dat
 kmeans03.dat
 kmeans04.dat
-/experiment
+/experiment/*
 *.membership
 *.cluster_centres
 *.xml
 matrix_mul
+*.dat
+*.exe
