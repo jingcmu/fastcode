@@ -9,3 +9,5 @@ kmeans04.dat
 /experiment
 *.membership
 *.cluster_centres
+*.xml
+matrix_mul
