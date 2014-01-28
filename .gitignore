@@ -1,4 +1,12 @@
-18645_spring_14.tar.gz
 *.o
 *~
 ~.swp
+kmeans01.dat
+kmeans02.dat
+kmeans03.dat
+kmeans04.dat
+/experiment
+*.membership
+*.cluster_centres
+*.xml
+matrix_mul
