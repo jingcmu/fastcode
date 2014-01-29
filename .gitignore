@@ -13,3 +13,6 @@ kmeans04.dat
 matrix_mul
 *.dat
 *.exe
+*.out
+omp_main
+seq_main
