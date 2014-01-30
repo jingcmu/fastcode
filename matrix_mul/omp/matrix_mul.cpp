@@ -36,30 +36,46 @@ void matrix_multiplication(float *sq_matrix_1, float *sq_matrix_2,
 	}
 	
 	if(sq_dimension%4 == 0)
-		#pragma omp parallel for if(sq_dimension > 200)
+		#pragma omp parallel for 
 		for (unsigned int i = 0; i < sq_dimension; i++) 
 		{
 			for(unsigned int j = 0; j < sq_dimension; j++) 
 			{       
-				__m128 dest = (__m128)_mm_setzero_si128();
+				__m128 dest1 = (__m128)_mm_setzero_si128();
+				__m128 dest2 = (__m128)_mm_setzero_si128();
+				//__m128 dest3 = (__m128)_mm_setzero_si128();
+				//__m128 dest4 = (__m128)_mm_setzero_si128();
 				sq_matrix_result[i*sq_dimension + j] = 0;
-				for (unsigned int k = 0; k < (sq_dimension>>2)*4; k+=4) {
+				for (unsigned int k = 0; k < (sq_dimension>>3)*8; k+=8) {
 					__m128* src1 = (__m128*)&sq_matrix_1[i*sq_dimension + k];
 					__m128* src2 = (__m128*)&sq_matrix_2_tmp[j*sq_dimension + k];
-					dest = _mm_add_ps(dest, _mm_mul_ps(*src1, *src2));
+					dest1 = _mm_add_ps(dest1, _mm_mul_ps(*src1, *src2));
+					__m128* src3 = (__m128*)&sq_matrix_1[i*sq_dimension + k+4];
+					__m128* src4 = (__m128*)&sq_matrix_2_tmp[j*sq_dimension + k+4];
+					dest2 = _mm_add_ps(dest2, _mm_mul_ps(*src3, *src4));
+					//__m128* src5 = (__m128*)&sq_matrix_1[i*sq_dimension + k+8];
+					//__m128* src6 = (__m128*)&sq_matrix_2_tmp[j*sq_dimension + k+8];
+					//dest3 = _mm_add_ps(dest3, _mm_mul_ps(*src5, *src6));
+					//__m128* src7 = (__m128*)&sq_matrix_1[i*sq_dimension + k+12];
+					//__m128* src8 = (__m128*)&sq_matrix_2_tmp[j*sq_dimension + k+12];
+					//dest4 = _mm_add_ps(dest4, _mm_mul_ps(*src7, *src8));
 				}
-				float * dest_f = (float *)&dest;
+				float * dest_pf1 = (float *)&dest1, dest_f = 0.0f;
+				float * dest_pf2 = (float *)&dest2;
+				//float * dest_pf3 = (float *)&dest3;
+				//float * dest_pf4 = (float *)&dest4;
 				for(int p=0; p<4; p++) {
-					sq_matrix_result[i*sq_dimension + j] += (*dest_f++);
+					 dest_f += (*dest_pf1++ + *dest_pf2++);
 				}
-				for (unsigned int k = (sq_dimension>>2)*4; k < sq_dimension; k++) {
+				sq_matrix_result[i*sq_dimension + j] = dest_f;
+				for (unsigned int k = (sq_dimension>>3)*8; k < sq_dimension; k++) {
 					sq_matrix_result[i*sq_dimension + j] += sq_matrix_1[i*sq_dimension + k] * 
 															sq_matrix_2_tmp[j*sq_dimension + k];
 				}
 			}
 		}
 	else
-		#pragma omp parallel for if(sq_dimension > 200)
+		#pragma omp parallel for if(sq_dimension > 20)
 		for (unsigned int i = 0; i < sq_dimension; i++) 
 		{
 			for(unsigned int j = 0; j < sq_dimension; j++) 
