@@ -43,6 +43,8 @@ void matrix_multiplication(float *sq_matrix_1, float *sq_matrix_2,
 			{       
 				__m128 dest = (__m128)_mm_setzero_si128();
 				sq_matrix_result[i*sq_dimension + j] = 0;
+				_mm_prefetch(&sq_matrix_1[i*sq_dimension], _MM_HINT_NTA);
+				_mm_prefetch(&sq_matrix_2_tmp[j*sq_dimension], _MM_HINT_NTA);
 				for (unsigned int k = 0; k < (sq_dimension>>2)*4; k+=4) {
 					__m128* src1 = (__m128*)&sq_matrix_1[i*sq_dimension + k];
 					__m128* src2 = (__m128*)&sq_matrix_2_tmp[j*sq_dimension + k];
