@@ -33,7 +33,11 @@ float euclid_dist_2(int    numdims,  /* no. dimensions */
                     float *coord2)   /* [numdims] */
 {
     int i;
-    float ans=0.0;
+    float ans=0.0, *dest_f;
+
+    //for(i=0; i<numdims; i++)
+    //	 ans += (coord1[i]-coord2[i]) * (coord1[i]-coord2[i]);	
+    
     __m128 dest = _mm_setzero_ps(), dest_sub;    
     for (i=0; i<((numdims>>2)<<2); i+=4) {
 	 __m128 src1 = _mm_loadu_ps(coord1);
@@ -41,11 +45,11 @@ float euclid_dist_2(int    numdims,  /* no. dimensions */
 	 dest_sub	 = _mm_sub_ps(src1, src2);
         dest += _mm_mul_ps(dest_sub, dest_sub);
     }    
-
+    dest_f = (float *)&dest;
     for(i=((numdims>>2)<<2); i<numdims; i++)
 	 ans += (coord1[i]-coord2[i]) * (coord1[i]-coord2[i]);	
-
-    return(ans);
+    
+    return(ans+(*dest_f)+*(dest_f+1)+*(dest_f+2)+*(dest_f+3));
 }
 
 /*----< find_nearest_cluster() >---------------------------------------------*/
