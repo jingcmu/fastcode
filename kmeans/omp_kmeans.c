@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include <omp.h>
+#include <emmintrin.h>
 #include "kmeans.h"
 
 
@@ -33,9 +34,16 @@ float euclid_dist_2(int    numdims,  /* no. dimensions */
 {
     int i;
     float ans=0.0;
+    __m128 dest = _mm_setzero_ps(), dest_sub;    
+    for (i=0; i<((numdims>>2)<<2); i+=4) {
+	 __m128 src1 = _mm_loadu_ps(coord1);
+    	 __m128 src2 = _mm_loadu_ps(coord2);
+	 dest_sub	 = _mm_sub_ps(src1, src2);
+        dest += _mm_mul_ps(dest_sub, dest_sub);
+    }    
 
-    for (i=0; i<numdims; i++)
-        ans += (coord1[i]-coord2[i]) * (coord1[i]-coord2[i]);
+    for(i=((numdims>>2)<<2); i<numdims; i++)
+	 ans += (coord1[i]-coord2[i]) * (coord1[i]-coord2[i]);	
 
     return(ans);
 }
