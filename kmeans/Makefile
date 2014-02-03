@@ -70,7 +70,7 @@ OMP_SRC     = omp_main.c \
 OMP_OBJ     = $(OMP_SRC:%.c=%.o)
 
 omp_kmeans.o: omp_kmeans.c $(H_FILES)
-	$(CC) $(CFLAGS) -msse2 -msse3 -msse4 -O3 $(OMPFLAGS) -c omp_kmeans.c 
+	$(CC) $(CFLAGS) -msse2 -msse3 -msse4 -O2 $(OMPFLAGS) -c omp_kmeans.c 
 
 omp: omp_main
 omp_main: $(OMP_OBJ) file_io.o
