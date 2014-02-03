@@ -2,7 +2,6 @@
 *.o
 *~
 ~.swp
-kmeans01.dat
 kmeans02.dat
 kmeans03.dat
 kmeans04.dat
@@ -11,7 +10,6 @@ kmeans04.dat
 *.cluster_centres
 *.xml
 matrix_mul
-*.dat
 *.exe
 *.out
 omp_main
