@@ -1,0 +1,25 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BLOCK_SIZE	matrix_mul.h	22;"	d
+CC	Makefile	/^CC = g++$/;"	m
+CFLAGS	Makefile	/^CFLAGS = -c -g -Wall -I\/opt\/local\/include -I$(HOME)\/cppunit\/include$/;"	m
+LDFLAGS	Makefile	/^LDFLAGS = -L\/opt\/local\/lib -L$(HOME)\/cppunit\/lib$/;"	m
+LIBS	Makefile	/^LIBS = -lcppunit -ldl$/;"	m
+MATRIX_MUL_H	matrix_mul.h	21;"	d
+NUM_REPS	tests.cpp	30;"	d	file:
+NVCC	Makefile	/^NVCC = nvcc$/;"	m
+OBJS	Makefile	/^OBJS = matrix_mul.o tests.o$/;"	m
+PROJ	Makefile	/^PROJ = matrix_mul$/;"	m
+Tests	tests.cpp	/^  class Tests : public CppUnit::TestFixture, public testutil::TestFrameWork$/;"	c	namespace:cuda	file:
+cuda	matrix_mul.h	/^namespace cuda$/;"	n
+cuda	tests.cpp	/^namespace cuda$/;"	n	file:
+filename	tests.cpp	/^    static char *filename;$/;"	m	class:cuda::Tests	file:
+filename	tests.cpp	/^char* cuda::Tests::filename = new char[100];$/;"	m	class:cuda::Tests	file:
+main	tests.cpp	/^main(int argc, char **argv) $/;"	f
+result	tests.cpp	/^    float *result;$/;"	m	class:cuda::Tests	file:
+setUp	tests.cpp	/^    setUp()$/;"	f	class:cuda::Tests
+test_cases	tests.cpp	/^    test_cases()$/;"	f	class:cuda::Tests
