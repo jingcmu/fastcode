@@ -19,7 +19,7 @@
 
 #ifndef MATRIX_MUL_H
 #define MATRIX_MUL_H
-#define BLOCK_SIZE 20
+#define BLOCK_SIZE 25
 
 namespace cuda
 {
