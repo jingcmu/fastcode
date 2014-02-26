@@ -284,7 +284,7 @@ float** cuda_kmeans(float **objects,      /* in: [numObjs][numCoords] */
 
         cudaThreadSynchronize(); checkLastCudaError();
 
-        compute_delta <<< 2, numReductionThreads/2, reductionBlockSharedDataSize >>>
+        compute_delta <<< 1, numReductionThreads, reductionBlockSharedDataSize >>>
             (deviceIntermediates, numClusterBlocks, numReductionThreads);
 
         cudaThreadSynchronize(); checkLastCudaError();
