@@ -1,3 +1,4 @@
+.DS_Store
 *.o
 *~
 ~.swp
@@ -17,3 +18,11 @@ matrix_mul/sequential/matrix_mul
 omp_main
 seq_main
 *.sh
+*.txt
+*.txt
+*.class
+part-*
+tmp/
+data/
+.svn/
+
