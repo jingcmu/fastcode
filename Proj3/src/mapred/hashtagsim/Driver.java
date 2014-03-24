@@ -3,18 +3,13 @@ package mapred.hashtagsim;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Map;
 
 import mapred.job.MyOptimizedjob;
 import mapred.job.Optimizedjob;
 import mapred.util.FileUtil;
-import mapred.util.InputLines;
 import mapred.util.SimpleParser;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 
 public class Driver {
@@ -26,23 +21,23 @@ public class Driver {
 		String output = parser.get("output");
 		String tmpdir = parser.get("tmpdir");
 
-		// getJobFeatureVector(input, tmpdir + "/job_feature_vector");
-
 		getHashtagFeatureVector(input, tmpdir + "/feature_vector");
 
-		FileUtil.copyFile(tmpdir + "/feature_vector" + "/part-r-00000", tmpdir
-				+ "/feature_vector" + "/part-r-00001");
-
-		FileUtil.joinFiles(tmpdir + "/feature_vector" + "/part-r-00000", tmpdir
-				+ "/feature_vector" + "/part-r-00001", tmpdir
-				+ "/feature_vector" + "/part-r-00002");
+		// FileUtil.copyFile(tmpdir + "/feature_vector" + "/part-r-00000",
+		// tmpdir
+		// + "/feature_vector" + "/part-r-00001");
+		//
+		// FileUtil.joinFiles(tmpdir + "/feature_vector" + "/part-r-00000",
+		// tmpdir
+		// + "/feature_vector" + "/part-r-00001", tmpdir
+		// + "/feature_vector" + "/part-r-00002");
 		// add for all the job feature vector
 		// ArrayList<String> hashtagFeatureList = loadJobFeatureVector(tmpdir
 		// + "/feature_vector");
 		// getHashtagSimilarities(hashtagFeatureList.toString(), tmpdir
 		// + "/feature_vector", output);
 
-		getHashtagSimilarities(tmpdir + "/feature_vector" + "/part-r-00002",
+		getHashtagSimilarities(tmpdir + "/feature_vector" + "/part-r-00000",
 				output);
 
 	}
@@ -153,10 +148,11 @@ public class Driver {
 			throws IOException, ClassNotFoundException, InterruptedException {
 		// Share the feature vector of #job to all mappers.
 		Configuration conf = new Configuration();
+		conf.set("input", input);
 		MyOptimizedjob job = new MyOptimizedjob(conf, input, output,
 				"Get similarities between any two hashtags");
-		job.setClasses(SimilarityMapper.class, null, null);
-		job.setMapOutputClasses(IntWritable.class, Text.class);
+		job.setClasses(SimilarityMapper.class, SimilarityReducer.class, null);
+		job.setMapOutputClasses(Text.class, Text.class);
 		job.run();
 	}
 }

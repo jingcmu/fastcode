@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
@@ -16,9 +17,11 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.VIntWritable;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
 
-public class SimilarityMapper extends Mapper<LongWritable, Text, Text, Text> {
+public class SimilarityReducer extends Reducer<Text, Text, VIntWritable, Text> {
 
 	// Map<String, Integer> jobFeatures = null;
 	String tag = null;
@@ -29,51 +32,32 @@ public class SimilarityMapper extends Mapper<LongWritable, Text, Text, Text> {
 	 * of the specific tag
 	 */
 	@Override
-	protected void map(LongWritable key, Text value, Context context)
+	protected void reduce(Text key, Iterable<Text> value, Context context)
 			throws IOException, InterruptedException {
-		Configuration configuration = context.getConfiguration();
-		FileSystem fs = FileSystem.get(configuration);
-		FSDataInputStream in = null;
-		BufferedReader br = null;
-		try {
 
-			in = fs.open(new Path(configuration.get("input")));
-			br = new BufferedReader(new InputStreamReader(in));
+		String[] hashtag_featureVector1 = key.toString().split("\\s+", 2);
 
-			String tmpStr = "";
-			while ((tmpStr = br.readLine()) != null) {
-				context.write(new Text(value.toString()), new Text(tmpStr));
+		String hashtag1 = hashtag_featureVector1[0];
+		Map<String, Integer> features1 = parseFeatureVector(hashtag_featureVector1[1]);
+
+		String[] hashtag_featureVector2 = null;
+		String hashtag2 = null;
+		for (Text word : value) {
+			hashtag_featureVector2 = word.toString().split("\\s+", 2);
+			hashtag2 = hashtag_featureVector2[0];
+			Map<String, Integer> features2 = parseFeatureVector(hashtag_featureVector2[1]);
+
+			Integer similarity = computeInnerProduct(features1, features2);
+
+			// ignore 0 similarity
+			if (similarity == 0) {
+				continue;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+
+			context.write(new VIntWritable(similarity), new Text(hashtag1
+					+ "\t" + hashtag2));
 		}
 
-		// String line = value.toString();
-		// String[] hashtag_featureVector = line.split("\\s+", 4);
-		// String hashtag1 = hashtag_featureVector[0];
-		//
-		// String hashtag2 = hashtag_featureVector[2];
-		//
-		// // ignore self comparison
-		// if (hashtag1.equals(hashtag2)) {
-		// return;
-		// }
-		//
-		// Map<String, Integer> features1 =
-		// parseFeatureVector(hashtag_featureVector[1]);
-		//
-		// Map<String, Integer> features2 =
-		// parseFeatureVector(hashtag_featureVector[3]);
-		//
-		// Integer similarity = computeInnerProduct(features1, features2);
-		//
-		// // ignore 0 similarity
-		// if (similarity==0) {
-		// return;
-		// }
-		//
-		// context.write(new IntWritable(similarity), new Text(hashtag1 + "\t"
-		// + hashtag2));
 	}
 
 	/**

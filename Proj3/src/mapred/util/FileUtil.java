@@ -7,7 +7,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -163,6 +165,7 @@ public class FileUtil {
 				out.write(buffer, 0, bytesRead);
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
 			System.out.println("Error while copying file");
 		} finally {
 			try {
@@ -196,18 +199,24 @@ public class FileUtil {
 			out = fs.create(new Path(outputFilename));
 			bw = new BufferedWriter(new OutputStreamWriter(out));
 
-			String str1 = "";
-			String str2 = "";
+			String tmpStr = "";
 
-			while ((str1 = br1.readLine()) != null) {
-				in2.seek(0);
-				while ((str2 = br2.readLine()) != null) {
-					bw.write(str1 + "\t" + str2);
-					bw.newLine();
-				}
+			ArrayList<String> strList = new ArrayList<String>();
+			while ((tmpStr = br1.readLine()) != null) {
+				strList.add(tmpStr);
 			}
+
+			for (String str1 : strList) {
+				bw.write(str1+"\t");
+				for (String str2 : strList) {
+					bw.write(str2+"\t");
+				}
+				bw.newLine();
+			}
+
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		} finally {
 			try {
 				if (br1 != null) {
