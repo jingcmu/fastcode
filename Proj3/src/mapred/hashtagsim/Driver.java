@@ -1,17 +1,12 @@
 package mapred.hashtagsim;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import mapred.job.MyOptimizedjob;
 import mapred.job.Optimizedjob;
 import mapred.util.FileUtil;
 import mapred.util.SimpleParser;
-
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.VIntWritable;
 
 public class Driver {
 
@@ -24,10 +19,8 @@ public class Driver {
 
 		getHashtagFeatureVector(input, tmpdir + "/feature_vector");
 
-		getHashtagSimilarities(tmpdir + "/feature_vector" + "/part-r-00000",
-				output);
+		getHashtagSimilarities(tmpdir + "/feature_vector", output);
 	}
-
 
 	/**
 	 * Same as getJobFeatureVector, but this one actually computes feature
@@ -61,16 +54,13 @@ public class Driver {
 	 * @throws ClassNotFoundException
 	 * @throws InterruptedException
 	 */
-	private static void getHashtagSimilarities(String input, String output)
-			throws IOException, ClassNotFoundException, InterruptedException {
+	private static void getHashtagSimilarities(String input, String output) throws IOException,
+			ClassNotFoundException, InterruptedException {
 		// Share the feature vector of #job to all mappers.
-		Configuration conf = new Configuration();
-		conf.set("input", input);
-		MyOptimizedjob job = new MyOptimizedjob(conf, input, output,
-				"Get similarities between any two hashtags");
-		job.setClasses(SimilarityMapper.class, null, null);
-		
-		job.setMapOutputClasses(VIntWritable.class, Text.class);
+		Optimizedjob job = new Optimizedjob(new Configuration(), input, output,
+				"Get similarities between #job and all other hashtags");
+		job.setClasses(SimilarityMapper.class, SimilarityReducer.class, null);
+		job.setMapOutputClasses(Text.class, IntWritable.class);
 		job.run();
 	}
 }
