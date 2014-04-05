@@ -2,7 +2,6 @@ package mapred.hashtagsim;
 
 import java.io.IOException;
 import mapred.job.Optimizedjob;
-import mapred.util.FileUtil;
 import mapred.util.SimpleParser;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
@@ -54,19 +53,20 @@ public class Driver {
 	 * @throws ClassNotFoundException
 	 * @throws InterruptedException
 	 */
-	private static void getHashtagSimilarities(String input, String output) throws IOException,
-			ClassNotFoundException, InterruptedException {
+	private static void getHashtagSimilarities(String input, String output)
+			throws IOException, ClassNotFoundException, InterruptedException {
 		// Share the feature vector of #job to all mappers.
 		Configuration config = new Configuration();
-		config.set("io.sort.mb", "400");
-		config.set("mapred.child.java.opts", "-Xmx800m");
-		config.set("dfs.block.size", "512");
-		config.set("imapred.compress.map.output", "true");
-		config.set("io.sort.factor", "100");
-		config.set("io.sort.spill.percent", "0.9");
+		// config.set("io.sort.mb", "400");
+		// config.set("mapred.child.java.opts", "-Xmx800m");
+		// config.set("dfs.block.size", "512");
+		// config.set("imapred.compress.map.output", "true");
+		// config.set("io.sort.factor", "100");
+		// config.set("io.sort.spill.percent", "0.9");
 		Optimizedjob job = new Optimizedjob(config, input, output,
-				"Get similarities between #job and all other hashtags");
-		job.setClasses(SimilarityMapper.class, SimilarityReducer.class, SimilarityReducer.class);
+				"Get similarities between every two hashtags");
+		job.setClasses(SimilarityMapper.class, SimilarityReducer.class,
+				SimilarityCombiner.class);
 		job.setMapOutputClasses(Text.class, IntWritable.class);
 		job.run();
 	}

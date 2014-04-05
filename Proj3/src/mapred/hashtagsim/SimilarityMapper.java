@@ -1,7 +1,6 @@
 package mapred.hashtagsim;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +30,10 @@ public class SimilarityMapper extends Mapper<LongWritable, Text, Text, IntWritab
 		Text keys = new Text();
 		IntWritable valueOut = new IntWritable();
 		String[] hashTags = hashtag_featureVector[1].split(";");
+		
+		// need to sort the array in case of duplicates in "#a #b" and "#b #a"
 		Arrays.sort(hashTags);
+		
 		for (String hashTag : hashTags) {
 			String[] tag_count = hashTag.split(":");
 			tags.add(tag_count[0]);
@@ -43,7 +45,7 @@ public class SimilarityMapper extends Mapper<LongWritable, Text, Text, IntWritab
 				int similarity = values.get(i)*values.get(j);
 				newTag.setLength(0);
 				newTag.append(tags.get(i));
-				newTag.append(" ");
+				newTag.append("\t");
 				newTag.append(tags.get(j));
 				keys.set(newTag.toString());
 				valueOut.set(similarity);
