@@ -14,6 +14,7 @@ public class HashtagReducer extends Reducer<Text, Text, Text, Text> {
 			throws IOException, InterruptedException {		
 		
 		Map<String, Integer> counts = new HashMap<String, Integer>();
+		Text values = new Text();
 		for (Text word : value) {
 			String w = word.toString();
 			Integer count = counts.get(w);
@@ -32,6 +33,7 @@ public class HashtagReducer extends Reducer<Text, Text, Text, Text> {
 		for (Map.Entry<String, Integer> e : counts.entrySet()) 
 			builder.append(e.getKey() + ":" + e.getValue() + ";");
 		
-		context.write(key, new Text(builder.toString()));
+		values.set(builder.toString());
+		context.write(key, values);
 	}
 }

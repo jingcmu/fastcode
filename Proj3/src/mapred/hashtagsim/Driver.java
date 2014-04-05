@@ -57,9 +57,16 @@ public class Driver {
 	private static void getHashtagSimilarities(String input, String output) throws IOException,
 			ClassNotFoundException, InterruptedException {
 		// Share the feature vector of #job to all mappers.
-		Optimizedjob job = new Optimizedjob(new Configuration(), input, output,
+		Configuration config = new Configuration();
+		config.set("io.sort.mb", "400");
+		config.set("mapred.child.java.opts", "-Xmx800m");
+		config.set("dfs.block.size", "512");
+		config.set("imapred.compress.map.output", "true");
+		config.set("io.sort.factor", "100");
+		config.set("io.sort.spill.percent", "0.9");
+		Optimizedjob job = new Optimizedjob(config, input, output,
 				"Get similarities between #job and all other hashtags");
-		job.setClasses(SimilarityMapper.class, SimilarityReducer.class, null);
+		job.setClasses(SimilarityMapper.class, SimilarityReducer.class, SimilarityReducer.class);
 		job.setMapOutputClasses(Text.class, IntWritable.class);
 		job.run();
 	}

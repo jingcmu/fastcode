@@ -16,6 +16,8 @@ public class HashtagMapper extends Mapper<LongWritable, Text, Text, Text> {
 			throws IOException, InterruptedException {
 		String line = value.toString();
 		String[] words = Tokenizer.tokenize(line);
+		Text keys = new Text();
+		Text values = new Text();
 
 		/*
 		 * Iterate all words, find out all hashtags, then iterate all other non-hashtag 
@@ -24,8 +26,11 @@ public class HashtagMapper extends Mapper<LongWritable, Text, Text, Text> {
 		for (String word : words) 
 			if (word.startsWith("#")) 
 				for (String word2 : words)
-					if (word2.startsWith("#")==false)
-						context.write(new Text(word2), new Text(word));
+					if (word2.startsWith("#")==false) {
+						keys.set(word2);
+						values.set(word);
+						context.write(keys, values);
+					}
 		
 		
 	}
